@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "vm2" do |vm2|
     vm2.vm.box = "ubuntu/bionic64"  # Box Ubuntu 18.04 LTS
     vm2.vm.hostname = "vm2"
-    vm2.vm.network "private_network", ip: "192.168.56.10"
+    vm2.vm.network "private_network", ip: "192.168.56.10", auto_config: false
     vm2.vm.provider "virtualbox" do |vb2|
       vb2.memory = "512"
     end
