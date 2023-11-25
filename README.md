@@ -14,3 +14,5 @@ Indicar um firewall físico...
 A alteração da senha do roteador da empresa também é uma implementação de nível fundamental, pois utilizar a senha padrão abre margem para gerenciamento de um terceiro em toda a estrutura de rede, possibilitando a intervenção e aplicação de um falso DNS.
 
 
+https://tiagotavares.wordpress.com/2020/01/07/%F0%9F%A4%96-vagrant-configuracao-de-rede/
+SITE PARA TALVEZ CONFIGURAR O DHCP E DNS E DAR CERTO ESSA BAGAÇA!!!
