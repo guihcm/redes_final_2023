@@ -13,5 +13,5 @@ Ao conduzir a análise na rede, identificamos pacotes desatualizados. Nesse cont
 
 Além disso, a alteração da senha do roteador da empresa é uma implementação fundamental, pois o uso da senha padrão abre espaço para o gerenciamento por terceiros em toda a estrutura de rede, possibilitando intervenções e a aplicação de um falso DNS.
 
-##### Resultados Esperados:
+#### Resultados Esperados:
 A implementação proposta visa reduzir significativamente as vulnerabilidades na rede, fortalecendo as defesas contra ameaças cibernéticas. Pretende-se aprimorar a detecção e resposta a incidentes, proporcionando uma resposta ágil e eficaz. Além disso, busca-se reforçar a confiabilidade e integridade dos dados corporativos, assegurando um ambiente digital seguro e resiliente para todas as operações da empresa.
