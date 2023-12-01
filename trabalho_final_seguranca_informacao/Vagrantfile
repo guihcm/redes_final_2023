@@ -1,41 +1,50 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
+# Hack estranho para contornar alguns problemas de interface dhcp.
+# Será resolvido pelo Vagrant algum dia.
+class VagrantPlugins::ProviderVirtualBox::Action::Network
+  def dhcp_server_matches_config?(dhcp_server, config)
+    true
+  end
+end
+
 Vagrant.configure("2") do |config|
-
-  # Configuração da primeira VM
-
-  #firewall
-  #vm pai
-  config.vm.define "vm1" do |vm1|
-    vm1.vm.box = "ubuntu/bionic64"  # Box Ubuntu 18.04 LTS
-    vm1.vm.hostname = "vm1"
-    vm1.vm.network "forwarded_port", guest: 80, host: 8888
-    vm1.vm.provider "virtualbox" do |vb1|
-      vb1.memory = "512"
+  config.vm.define "pfsense" do |pfsense|
+    pfsense.vm.guest = :freebsd
+    pfsense.vm.box = "ksklareski/pfsense-ce"
+    pfsense.vm.hostname = "pfsense"
+    pfsense.ssh.shell = 'sh'
+    pfsense.ssh.insert_key = false # Definir como true (que é o padrão) quebra a provisionamento.
+    pfsense.vm.network "private_network", ip: "192.168.56.10"
+    pfsense.vm.network "forwarded_port", guest: 80, host: 8080
+    pfsense.vm.provider "virtualbox" do |vb|
+      vb.memory = "1024"
+      vb.cpus = "1"
     end
-    config.vm.provision "shell", path: "configuracoes.sh"
+    pfsense.vm.provision "file", source: "./pfsense-config.xml", destination: "/tmp/config.xml" # A configuração instalada possui uma interface NAT e uma interface privada em 192.168.222.1/24. Os nomes de usuário para webconfig são admin/vagrant e vagrant/vagrant.
+    pfsense.vm.provision "shell",
+      inline: "mv /tmp/config.xml /cf/conf/config.xml; rm /tmp/config.cache" # Removendo a configuração temporária para atualizar o pfsense.
   end
 
   # Configuração da segunda VM
   config.vm.define "vm2" do |vm2|
-    vm2.vm.box = "ubuntu/bionic64"  # Box Ubuntu 18.04 LTS
+    vm2.vm.box = "ubuntu/focal64"
     vm2.vm.hostname = "vm2"
-    vm2.vm.network "private_network", ip: "192.168.56.10", auto_config: false
+    vm2.vm.network "private_network", type: "dhcp"
     vm2.vm.provider "virtualbox" do |vb2|
       vb2.memory = "512"
     end
-    config.vm.provision "shell", path: "route1.sh"
+    vm2.vm.provision "shell", path: "route1.sh"
   end
 
   # Configuração da terceira VM
   config.vm.define "vm3" do |vm3|
-    vm3.vm.box = "ubuntu/bionic64"  # Box Ubuntu 18.04 LTS
+    vm3.vm.box = "ubuntu/focal64"
     vm3.vm.hostname = "vm3"
-    vm3.vm.network "private_network", ip: "192.168.56.15"
+    vm3.vm.network "private_network", type: "dhcp"
     vm3.vm.provider "virtualbox" do |vb3|
       vb3.memory = "512"
     end
-    config.vm.provision "shell", path: "route2.sh"
+    vm3.vm.provision "shell", 
+    path: "route2.sh"
   end
 
 end
